@@ -48,11 +48,14 @@ function getRandomIntInclusive(min, max) {
     const filterButton = document.querySelector('.filter');
     const loadDataButton = document.querySelector('#data_load');
     const generateListButton = document.querySelector('#generate');
+    const textField = document.querySelector('#resto');
   
     const loadAnimation = document.querySelector('#data_load_animation');
-    loadAnimation.style.display = 'none'
+    loadAnimation.style.display = 'none';
+    generateListButton.classList.add('hidden')
   
     // Add a querySelector that targets your filter button here
+    letStoredList = [];
   
     let currentList = []; // this is "scoped" to the main event function
     
@@ -80,9 +83,12 @@ function getRandomIntInclusive(min, max) {
       const results = await fetch('https://data.princegeorgescountymd.gov/resource/umjn-t2iz.json');
   
       // This changes the response from the GET into data we can use - an "object"
-      currentList = await results.json();
+      storedList = await results.json();
+      if (storedList.length > 0) {
+        generateListButton.classList.remove('hidden');
+      }
       loadAnimation.style.display = 'none';
-      console.table(currentList);
+      console.table(storedList);
   
       /*
         This array initially contains all 1,000 records from your request,
@@ -106,10 +112,17 @@ function getRandomIntInclusive(min, max) {
   
     generateListButton.addEventListener('click', (event)=> { 
       console.log('generate new list');
-      const restaurantsList = cutRestaurantList(currentList);
-      console.log(restaurantsList);
-      injectHTML(restaurantsList);
+      currentList = cutRestaurantList(storedList);
+      console.log(currentList);
+      injectHTML(currentList);
     })
+
+    textField.addEventListener('input', (event)=> { 
+        console.log('input', event.target.value);
+        const newList = filterList(currentList, event.target.value);
+        console.log(newList);
+        injectHTML(newList);
+      })
   }
     /*
       Now that you HAVE a list loaded, write an event listener set to your filter button
