@@ -52,11 +52,13 @@ function getRandomIntInclusive(min, max) {
   
     const loadAnimation = document.querySelector('#data_load_animation');
     loadAnimation.style.display = 'none';
-    generateListButton.classList.add('hidden')
+    generateListButton.classList.add('hidden');
+
+   
   
     // Add a querySelector that targets your filter button here
-    letStoredList = [];
-  
+    let storedList = [];
+    
     let currentList = []; // this is "scoped" to the main event function
     
     /* We need to listen to an "event" to have something happen in our page - here we're listening for a "submit" */
@@ -85,8 +87,10 @@ function getRandomIntInclusive(min, max) {
       // This changes the response from the GET into data we can use - an "object"
       storedList = await results.json();
       if (storedList.length > 0) {
-        generateListButton.classList.remove('hidden');
+        generateListButton.classList.remove("hidden");
       }
+      
+      
       loadAnimation.style.display = 'none';
       console.table(storedList);
   
@@ -115,14 +119,14 @@ function getRandomIntInclusive(min, max) {
       currentList = cutRestaurantList(storedList);
       console.log(currentList);
       injectHTML(currentList);
-    })
+    });
 
     textField.addEventListener('input', (event)=> { 
         console.log('input', event.target.value);
         const newList = filterList(currentList, event.target.value);
         console.log(newList);
         injectHTML(newList);
-      })
+      });
   }
     /*
       Now that you HAVE a list loaded, write an event listener set to your filter button
